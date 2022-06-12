@@ -3,6 +3,7 @@ import {
   useInfiniteLaunchesPastListQuery,
   useLaunchNextQuery
 } from "./generated";
+import Layout from "./Container";
 
 const LIMIT = 10;
 
@@ -35,19 +36,17 @@ function App() {
 
   console.log(data);
   return (
-    <div className="App">
-      <header className="App-header">
-        <button
-          onClick={() => {
-            if (!isLoading) {
-              fetchNextPage();
-            }
-          }}
-        >
-          fetch next
-        </button>
-      </header>
-    </div>
+    <Layout>
+      <button
+        onClick={() => {
+          if (!isLoading) {
+            fetchNextPage();
+          }
+        }}
+      >
+        fetch next
+      </button>
+    </Layout>
   );
 }
 

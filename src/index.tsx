@@ -3,8 +3,14 @@ import ReactDOM from "react-dom/client";
 import "normalize.css";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ConfigProvider } from "antd";
 import reportWebVitals from "./reportWebVitals";
+import zhCN from "antd/lib/locale/zh_CN";
+import moment from "moment";
+import "moment/locale/zh-cn";
+import "antd/dist/antd.css";
 
+moment.locale("zh-cn");
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -18,7 +24,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <QueryClientProvider client={queryClient}>
-    <App />
+    <ConfigProvider locale={zhCN}>
+      <App />
+    </ConfigProvider>
   </QueryClientProvider>
 );
 
