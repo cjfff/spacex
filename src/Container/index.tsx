@@ -1,7 +1,7 @@
-import { Breadcrumb, Layout, Menu } from "antd";
-import classNames from "classnames";
 import React from "react";
-import "./index.less";
+import { Layout, Menu } from "antd";
+import classNames from "classnames";
+import styles from "./index.module.less";
 
 const { Header, Content } = Layout;
 
@@ -29,8 +29,13 @@ const App: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
       style={{ padding: "0 50px", marginTop: 64 }}
     >
       <div
-        className={classNames("site-layout-background", "container-layout")}
-        style={{ padding: 24, minHeight: "100vh" }}
+        className={classNames(
+          "site-layout-background",
+          styles["container-layout"]
+        )}
+        style={{
+          minHeight: "calc(100vh - 110px)"
+        }}
       >
         {children}
       </div>
