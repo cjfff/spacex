@@ -1,19 +1,21 @@
-import React, { useState, useRef } from "react";
-import { useInfiniteQuery } from "react-query";
-import logo from "./logo.svg";
-import { useInfiniteLaunchesPastListQuery } from "./generated";
-
-import "./App.css";
+import React from "react";
+import {
+  useInfiniteLaunchesPastListQuery,
+  useLaunchNextQuery
+} from "./generated";
 
 const LIMIT = 10;
 
 function App() {
+  const { data: recentData } = useLaunchNextQuery();
+
+  console.log(recentData);
   const { status, data, isLoading, hasNextPage, fetchNextPage } =
     useInfiniteLaunchesPastListQuery(
       "offset",
       {
         limit: LIMIT,
-        offset: 0,
+        offset: 0
       },
       {
         getNextPageParam(lastPage, allPages) {
@@ -25,16 +27,16 @@ function App() {
           }
 
           return {
-            offset,
+            offset
           };
-        },
+        }
       }
     );
 
+  console.log(data);
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <button
           onClick={() => {
             if (!isLoading) {
@@ -44,17 +46,6 @@ function App() {
         >
           fetch next
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );

@@ -8,8 +8,8 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
     const res = await fetch("https://api.spacex.land/graphql", {
-      method: "POST",
-      ...({ "headers": { "Content-Type": "application/json" } }),
+    method: "POST",
+    ...({"headers":{"Content-Type":"application/json"}}),
       body: JSON.stringify({ query, variables }),
     });
 
@@ -1349,7 +1349,7 @@ export type LaunchesPastListQueryVariables = Exact<{
 }>;
 
 
-export type LaunchesPastListQuery = { __typename?: 'Query', launchesPast?: Array<{ __typename?: 'Launch', id?: string | null, mission_name?: string | null, launch_date_local?: any | null, launch_success?: boolean | null, details?: string | null, launch_site?: { __typename?: 'LaunchSite', site_name_long?: string | null } | null, links?: { __typename?: 'LaunchLinks', article_link?: string | null, video_link?: string | null } | null, rocket?: { __typename?: 'LaunchRocket', rocket_name?: string | null, rocket_type?: string | null } | null } | null> | null };
+export type LaunchesPastListQuery = { __typename?: 'Query', launchesPast?: Array<{ __typename?: 'Launch', id?: string | null, mission_name?: string | null, launch_date_local?: any | null, launch_success?: boolean | null, details?: string | null, launch_site?: { __typename?: 'LaunchSite', site_name_long?: string | null } | null, links?: { __typename?: 'LaunchLinks', article_link?: string | null, video_link?: string | null, flickr_images?: Array<string | null> | null } | null, rocket?: { __typename?: 'LaunchRocket', rocket_name?: string | null, rocket_type?: string | null } | null } | null> | null };
 
 
 export const LaunchNextDocument = `
@@ -1375,30 +1375,30 @@ export const LaunchNextDocument = `
 }
     `;
 export const useLaunchNextQuery = <
-  TData = LaunchNextQuery,
-  TError = unknown
->(
-  variables?: LaunchNextQueryVariables,
-  options?: UseQueryOptions<LaunchNextQuery, TError, TData>
-) =>
-  useQuery<LaunchNextQuery, TError, TData>(
-    variables === undefined ? ['LaunchNext'] : ['LaunchNext', variables],
-    fetcher<LaunchNextQuery, LaunchNextQueryVariables>(LaunchNextDocument, variables),
-    options
-  );
+      TData = LaunchNextQuery,
+      TError = unknown
+    >(
+      variables?: LaunchNextQueryVariables,
+      options?: UseQueryOptions<LaunchNextQuery, TError, TData>
+    ) =>
+    useQuery<LaunchNextQuery, TError, TData>(
+      variables === undefined ? ['LaunchNext'] : ['LaunchNext', variables],
+      fetcher<LaunchNextQuery, LaunchNextQueryVariables>(LaunchNextDocument, variables),
+      options
+    );
 export const useInfiniteLaunchNextQuery = <
-  TData = LaunchNextQuery,
-  TError = unknown
->(
-  pageParamKey: keyof LaunchNextQueryVariables,
-  variables?: LaunchNextQueryVariables,
-  options?: UseInfiniteQueryOptions<LaunchNextQuery, TError, TData>
-) =>
-  useInfiniteQuery<LaunchNextQuery, TError, TData>(
-    variables === undefined ? ['LaunchNext.infinite'] : ['LaunchNext.infinite', variables],
-    (metaData) => fetcher<LaunchNextQuery, LaunchNextQueryVariables>(LaunchNextDocument, { ...variables, ...(metaData.pageParam ?? {}) })(),
-    options
-  );
+      TData = LaunchNextQuery,
+      TError = unknown
+    >(
+      pageParamKey: keyof LaunchNextQueryVariables,
+      variables?: LaunchNextQueryVariables,
+      options?: UseInfiniteQueryOptions<LaunchNextQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<LaunchNextQuery, TError, TData>(
+      variables === undefined ? ['LaunchNext.infinite'] : ['LaunchNext.infinite', variables],
+      (metaData) => fetcher<LaunchNextQuery, LaunchNextQueryVariables>(LaunchNextDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );
 
 export const LaunchesPastListDocument = `
     query LaunchesPastList($limit: Int, $offset: Int) {
@@ -1412,6 +1412,7 @@ export const LaunchesPastListDocument = `
     links {
       article_link
       video_link
+      flickr_images
     }
     rocket {
       rocket_name
@@ -1423,32 +1424,27 @@ export const LaunchesPastListDocument = `
 }
     `;
 export const useLaunchesPastListQuery = <
-  TData = LaunchesPastListQuery,
-  TError = unknown
->(
-  variables?: LaunchesPastListQueryVariables,
-  options?: UseQueryOptions<LaunchesPastListQuery, TError, TData>
-) =>
-  useQuery<LaunchesPastListQuery, TError, TData>(
-    variables === undefined ? ['LaunchesPastList'] : ['LaunchesPastList', variables],
-    fetcher<LaunchesPastListQuery, LaunchesPastListQueryVariables>(LaunchesPastListDocument, variables),
-    options
-  );
+      TData = LaunchesPastListQuery,
+      TError = unknown
+    >(
+      variables?: LaunchesPastListQueryVariables,
+      options?: UseQueryOptions<LaunchesPastListQuery, TError, TData>
+    ) =>
+    useQuery<LaunchesPastListQuery, TError, TData>(
+      variables === undefined ? ['LaunchesPastList'] : ['LaunchesPastList', variables],
+      fetcher<LaunchesPastListQuery, LaunchesPastListQueryVariables>(LaunchesPastListDocument, variables),
+      options
+    );
 export const useInfiniteLaunchesPastListQuery = <
-  TData = LaunchesPastListQuery,
-  TError = unknown
->(
-  pageParamKey: keyof LaunchesPastListQueryVariables,
-  variables?: LaunchesPastListQueryVariables,
-  options?: UseInfiniteQueryOptions<LaunchesPastListQuery, TError, TData>
-) => {
-
-  return useInfiniteQuery<LaunchesPastListQuery, TError, TData>(
-    variables === undefined ? ['LaunchesPastList.infinite'] : ['LaunchesPastList.infinite', variables],
-    (metaData) => {
-      return fetcher<LaunchesPastListQuery, LaunchesPastListQueryVariables>(LaunchesPastListDocument, { ...variables, ...(metaData.pageParam ?? {}) })()
-    },
-    options
-  );
-}
-
+      TData = LaunchesPastListQuery,
+      TError = unknown
+    >(
+      pageParamKey: keyof LaunchesPastListQueryVariables,
+      variables?: LaunchesPastListQueryVariables,
+      options?: UseInfiniteQueryOptions<LaunchesPastListQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<LaunchesPastListQuery, TError, TData>(
+      variables === undefined ? ['LaunchesPastList.infinite'] : ['LaunchesPastList.infinite', variables],
+      (metaData) => fetcher<LaunchesPastListQuery, LaunchesPastListQueryVariables>(LaunchesPastListDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );
