@@ -1,11 +1,29 @@
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import { useQuery, useInfiniteQuery, UseQueryOptions, UseInfiniteQueryOptions, QueryFunctionContext } from 'react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions = {} as const;
+
+function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
+  return async (): Promise<TData> => {
+    const res = await fetch("https://api.spacex.land/graphql", {
+      method: "POST",
+      ...({ "headers": { "Content-Type": "application/json" } }),
+      body: JSON.stringify({ query, variables }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      const { message } = json.errors[0];
+
+      throw new Error(message);
+    }
+
+    return json.data;
+  }
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -1320,19 +1338,22 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
-export type LaunchNextListQueryVariables = Exact<{ [key: string]: never; }>;
+export type LaunchNextQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LaunchNextListQuery = { __typename?: 'Query', launchNext?: { __typename?: 'Launch', launch_date_local?: any | null, id?: string | null, launch_success?: boolean | null, details?: string | null, mission_name?: string | null, launch_site?: { __typename?: 'LaunchSite', site_name_long?: string | null } | null, links?: { __typename?: 'LaunchLinks', article_link?: string | null, video_link?: string | null } | null, rocket?: { __typename?: 'LaunchRocket', rocket_name?: string | null, rocket_type?: string | null } | null } | null };
+export type LaunchNextQuery = { __typename?: 'Query', launchNext?: { __typename?: 'Launch', launch_date_local?: any | null, id?: string | null, launch_success?: boolean | null, details?: string | null, mission_name?: string | null, launch_site?: { __typename?: 'LaunchSite', site_name_long?: string | null } | null, links?: { __typename?: 'LaunchLinks', article_link?: string | null, video_link?: string | null } | null, rocket?: { __typename?: 'LaunchRocket', rocket_name?: string | null, rocket_type?: string | null } | null } | null };
 
-export type LaunchesPastListQueryVariables = Exact<{ [key: string]: never; }>;
+export type LaunchesPastListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
 
 
 export type LaunchesPastListQuery = { __typename?: 'Query', launchesPast?: Array<{ __typename?: 'Launch', id?: string | null, mission_name?: string | null, launch_date_local?: any | null, launch_success?: boolean | null, details?: string | null, launch_site?: { __typename?: 'LaunchSite', site_name_long?: string | null } | null, links?: { __typename?: 'LaunchLinks', article_link?: string | null, video_link?: string | null } | null, rocket?: { __typename?: 'LaunchRocket', rocket_name?: string | null, rocket_type?: string | null } | null } | null> | null };
 
 
-export const LaunchNextListDocument = gql`
-    query LaunchNextList {
+export const LaunchNextDocument = `
+    query LaunchNext {
   launchNext {
     launch_date_local
     id
@@ -1353,36 +1374,35 @@ export const LaunchNextListDocument = gql`
   }
 }
     `;
+export const useLaunchNextQuery = <
+  TData = LaunchNextQuery,
+  TError = unknown
+>(
+  variables?: LaunchNextQueryVariables,
+  options?: UseQueryOptions<LaunchNextQuery, TError, TData>
+) =>
+  useQuery<LaunchNextQuery, TError, TData>(
+    variables === undefined ? ['LaunchNext'] : ['LaunchNext', variables],
+    fetcher<LaunchNextQuery, LaunchNextQueryVariables>(LaunchNextDocument, variables),
+    options
+  );
+export const useInfiniteLaunchNextQuery = <
+  TData = LaunchNextQuery,
+  TError = unknown
+>(
+  pageParamKey: keyof LaunchNextQueryVariables,
+  variables?: LaunchNextQueryVariables,
+  options?: UseInfiniteQueryOptions<LaunchNextQuery, TError, TData>
+) =>
+  useInfiniteQuery<LaunchNextQuery, TError, TData>(
+    variables === undefined ? ['LaunchNext.infinite'] : ['LaunchNext.infinite', variables],
+    (metaData) => fetcher<LaunchNextQuery, LaunchNextQueryVariables>(LaunchNextDocument, { ...variables, ...(metaData.pageParam ?? {}) })(),
+    options
+  );
 
-/**
- * __useLaunchNextListQuery__
- *
- * To run a query within a React component, call `useLaunchNextListQuery` and pass it any options that fit your needs.
- * When your component renders, `useLaunchNextListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useLaunchNextListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useLaunchNextListQuery(baseOptions?: Apollo.QueryHookOptions<LaunchNextListQuery, LaunchNextListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LaunchNextListQuery, LaunchNextListQueryVariables>(LaunchNextListDocument, options);
-      }
-export function useLaunchNextListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LaunchNextListQuery, LaunchNextListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LaunchNextListQuery, LaunchNextListQueryVariables>(LaunchNextListDocument, options);
-        }
-export type LaunchNextListQueryHookResult = ReturnType<typeof useLaunchNextListQuery>;
-export type LaunchNextListLazyQueryHookResult = ReturnType<typeof useLaunchNextListLazyQuery>;
-export type LaunchNextListQueryResult = Apollo.QueryResult<LaunchNextListQuery, LaunchNextListQueryVariables>;
-export const LaunchesPastListDocument = gql`
-    query LaunchesPastList {
-  launchesPast(limit: 10) {
+export const LaunchesPastListDocument = `
+    query LaunchesPastList($limit: Int, $offset: Int) {
+  launchesPast(limit: $limit, offset: $offset) {
     id
     mission_name
     launch_date_local
@@ -1402,30 +1422,33 @@ export const LaunchesPastListDocument = gql`
   }
 }
     `;
+export const useLaunchesPastListQuery = <
+  TData = LaunchesPastListQuery,
+  TError = unknown
+>(
+  variables?: LaunchesPastListQueryVariables,
+  options?: UseQueryOptions<LaunchesPastListQuery, TError, TData>
+) =>
+  useQuery<LaunchesPastListQuery, TError, TData>(
+    variables === undefined ? ['LaunchesPastList'] : ['LaunchesPastList', variables],
+    fetcher<LaunchesPastListQuery, LaunchesPastListQueryVariables>(LaunchesPastListDocument, variables),
+    options
+  );
+export const useInfiniteLaunchesPastListQuery = <
+  TData = LaunchesPastListQuery,
+  TError = unknown
+>(
+  pageParamKey: keyof LaunchesPastListQueryVariables,
+  variables?: LaunchesPastListQueryVariables,
+  options?: UseInfiniteQueryOptions<LaunchesPastListQuery, TError, TData>
+) => {
 
-/**
- * __useLaunchesPastListQuery__
- *
- * To run a query within a React component, call `useLaunchesPastListQuery` and pass it any options that fit your needs.
- * When your component renders, `useLaunchesPastListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useLaunchesPastListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useLaunchesPastListQuery(baseOptions?: Apollo.QueryHookOptions<LaunchesPastListQuery, LaunchesPastListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LaunchesPastListQuery, LaunchesPastListQueryVariables>(LaunchesPastListDocument, options);
-      }
-export function useLaunchesPastListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LaunchesPastListQuery, LaunchesPastListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LaunchesPastListQuery, LaunchesPastListQueryVariables>(LaunchesPastListDocument, options);
-        }
-export type LaunchesPastListQueryHookResult = ReturnType<typeof useLaunchesPastListQuery>;
-export type LaunchesPastListLazyQueryHookResult = ReturnType<typeof useLaunchesPastListLazyQuery>;
-export type LaunchesPastListQueryResult = Apollo.QueryResult<LaunchesPastListQuery, LaunchesPastListQueryVariables>;
+  return useInfiniteQuery<LaunchesPastListQuery, TError, TData>(
+    variables === undefined ? ['LaunchesPastList.infinite'] : ['LaunchesPastList.infinite', variables],
+    (metaData) => {
+      return fetcher<LaunchesPastListQuery, LaunchesPastListQueryVariables>(LaunchesPastListDocument, { ...variables, ...(metaData.pageParam ?? {}) })()
+    },
+    options
+  );
+}
+

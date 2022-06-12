@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const QUERY_LAUNCH_NEXT_LIST = gql`
-  query LaunchNextList {
+  query LaunchNext {
     launchNext {
       launch_date_local
       id
