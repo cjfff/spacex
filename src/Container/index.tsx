@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, Menu } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import styles from "./index.module.less";
 
@@ -8,6 +8,7 @@ const { Header, Content } = Layout;
 
 const Container: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   return (
     <Layout>
@@ -15,7 +16,7 @@ const Container: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["/"]}
+          defaultSelectedKeys={[pathname]}
           onSelect={(data) => {
             navigate(data.key);
           }}
@@ -25,7 +26,7 @@ const Container: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
               label: "Recent Launch"
             },
             {
-              key: "past",
+              key: "/past",
               label: "Past Launches"
             }
           ]}
