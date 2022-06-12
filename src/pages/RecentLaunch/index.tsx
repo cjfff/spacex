@@ -15,7 +15,7 @@ const RecentLaunch = () => {
         <Descriptions.Item label="LAUNCH_DATE">
           {data?.launchNext?.launch_date_local &&
             dayjs(data?.launchNext?.launch_date_local).format(
-              "YYYY-MM-DD mm:ss"
+              "YYYY-MM-DD hh:mm"
             )}
         </Descriptions.Item>
         <Descriptions.Item label="LAUNCH_SITE">
