@@ -5,6 +5,11 @@ import {
 } from "./generated";
 import Layout from "./Container";
 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+const LaunchesPast = React.lazy(() => import("./pages/LaunchesPast"));
+const RecentLaunch = React.lazy(() => import("./pages/RecentLaunch"));
+
 const LIMIT = 10;
 
 function App() {
@@ -36,17 +41,37 @@ function App() {
 
   console.log(data);
   return (
-    <Layout>
-      <button
-        onClick={() => {
-          if (!isLoading) {
-            fetchNextPage();
-          }
-        }}
-      >
-        fetch next
-      </button>
-    </Layout>
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route
+            index
+            element={
+              <React.Suspense>
+                <RecentLaunch />
+              </React.Suspense>
+            }
+          />
+          <Route
+            path="past"
+            element={
+              <React.Suspense>
+                <LaunchesPast />
+              </React.Suspense>
+            }
+          />
+        </Routes>
+        <button
+          onClick={() => {
+            if (!isLoading) {
+              fetchNextPage();
+            }
+          }}
+        >
+          fetch next
+        </button>
+      </Layout>
+    </BrowserRouter>
   );
 }
 

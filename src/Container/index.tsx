@@ -1,46 +1,51 @@
 import React from "react";
 import { Layout, Menu } from "antd";
+import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import styles from "./index.module.less";
 
 const { Header, Content } = Layout;
 
-const App: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
-  <Layout>
-    <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        defaultSelectedKeys={["2"]}
-        items={[
-          {
-            key: "a",
-            label: "recent"
-          },
-          {
-            key: "b",
-            label: "lunches"
-          }
-        ]}
-      />
-    </Header>
-    <Content
-      className="site-layout"
-      style={{ padding: "0 50px", marginTop: 64 }}
-    >
-      <div
-        className={classNames(
-          "site-layout-background",
-          styles["container-layout"]
-        )}
-        style={{
-          minHeight: "calc(100vh - 110px)"
-        }}
-      >
-        {children}
-      </div>
-    </Content>
-  </Layout>
-);
+const Container: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  const navigate = useNavigate();
 
-export default App;
+  return (
+    <Layout>
+      <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
+        <Menu
+          theme="dark"
+          mode="horizontal"
+          defaultSelectedKeys={["/"]}
+          onSelect={(data) => {
+            navigate(data.key);
+          }}
+          items={[
+            {
+              key: "/",
+              label: "Recent Launch"
+            },
+            {
+              key: "past",
+              label: "Past Launches"
+            }
+          ]}
+        />
+      </Header>
+      <Content className="site-layout" style={{ marginTop: 64 }}>
+        <div
+          className={classNames(
+            "site-layout-background",
+            styles["container-layout"]
+          )}
+          style={{
+            minHeight: "calc(100vh - 110px)"
+          }}
+        >
+          {children}
+        </div>
+      </Content>
+    </Layout>
+  );
+};
+
+export default Container;
